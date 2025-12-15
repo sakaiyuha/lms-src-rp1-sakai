@@ -47,6 +47,12 @@ public class AttendanceController {
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
+		boolean hasUnfilledPast = studentAttendanceService.hasUnfilledPastAttendance(
+				loginUserDto.getCourseId(),
+				loginUserDto.getLmsUserId());
+
+		model.addAttribute("showPastAlert", hasUnfilledPast);
+
 		return "attendance/detail";
 	}
 

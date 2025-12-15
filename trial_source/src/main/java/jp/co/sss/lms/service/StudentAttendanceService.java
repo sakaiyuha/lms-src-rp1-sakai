@@ -51,6 +51,7 @@ public class StudentAttendanceService {
 	 * @param lmsUserId
 	 * @return 勤怠管理画面用DTOリスト
 	 */
+
 	public List<AttendanceManagementDto> getAttendanceManagement(Integer courseId,
 			Integer lmsUserId) {
 
@@ -71,6 +72,19 @@ public class StudentAttendanceService {
 		}
 
 		return attendanceManagementDtoList;
+	}
+
+	public boolean hasUnfilledPastAttendance(Integer courseId, Integer lmsUserId) {
+
+		List<AttendanceManagementDto> list = getAttendanceManagement(courseId, lmsUserId);
+
+		for (AttendanceManagementDto dto : list) {
+			if (!Boolean.TRUE.equals(dto.getIsToday())) {
+				return true; 
+			}
+		}
+
+		return false; 
 	}
 
 	/**
