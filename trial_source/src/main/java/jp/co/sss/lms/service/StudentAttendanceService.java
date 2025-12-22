@@ -1,6 +1,7 @@
 package jp.co.sss.lms.service;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,17 +75,39 @@ public class StudentAttendanceService {
 		return attendanceManagementDtoList;
 	}
 
-	public boolean hasUnfilledPastAttendance(Integer courseId, Integer lmsUserId) {
+	/**
+	 * 未入力情報の確認
+	 * 
+	 * @author 酒井優羽-TASK25
+	 * @param lmsUserId
+	 * @return 未入力の有無
+	 */
+	public boolean PastUnenteredAttendance(Integer lmsUserId) throws ParseException {
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+		Date today = new Date();
+		Date trainingDate = date.parse(date.format(today));
+		Integer notEnterCount = tStudentAttendanceMapper.notEnterCount(loginUserDto.getLmsUserId(),
+				Constants.DB_FLG_FALSE, trainingDate);
+		return notEnterCount > Constants.DB_FLG_FALSE ? true : false;
+	}
 
-		List<AttendanceManagementDto> list = getAttendanceManagement(courseId, lmsUserId);
+	public void formatConversion(AttendanceForm attendanceForm) {
+		for (DailyAttendanceForm dailyAttendanceForm : attendanceForm.getAttendanceList()) {
 
-		for (AttendanceManagementDto dto : list) {
-			if (!Boolean.TRUE.equals(dto.getIsToday())) {
-				return true; 
+			if (dailyAttendanceForm.getTrainingStartTimeHour() != null
+					&& dailyAttendanceForm.getTrainingStartTime() != null) {
+				dailyAttendanceForm.setTrainingStartTime(String.format("%02d",
+						dailyAttendanceForm.getTrainingStartTimeHour()) + ":"
+						+ String.format("%02d", dailyAttendanceForm.getTrainingStartTimeMinute()));
+			}
+			if (dailyAttendanceForm.getTrainingEndTimeHour() != null
+					&& dailyAttendanceForm.getTrainingEndTime() != null) {
+				dailyAttendanceForm.setTrainingEndTime(String.format("%02d",
+						dailyAttendanceForm.getTrainingEndTimeHour()) + ":"
+						+ String.format("%02d", dailyAttendanceForm.getTrainingEndTimeMinute()));
 			}
 		}
 
-		return false; 
 	}
 
 	/**
@@ -251,6 +274,7 @@ public class StudentAttendanceService {
 					.setTrainingDate(dateUtil.toString(attendanceManagementDto.getTrainingDate()));
 			dailyAttendanceForm
 					.setTrainingStartTime(attendanceManagementDto.getTrainingStartTime());
+
 			dailyAttendanceForm.setTrainingEndTime(attendanceManagementDto.getTrainingEndTime());
 			if (attendanceManagementDto.getBlankTime() != null) {
 				dailyAttendanceForm.setBlankTime(attendanceManagementDto.getBlankTime());

@@ -40,18 +40,19 @@ public class AttendanceController {
 	 * @throws ParseException
 	 */
 	@RequestMapping(path = "/detail", method = RequestMethod.GET)
-	public String index(Model model) {
+	public String index(Model model) throws ParseException {
 
-		// 勤怠一覧の取得
+		//酒井優羽-TASK25
+		Integer courseId = loginUserDto.getCourseId();
+		Integer lmsUserId = loginUserDto.getLmsUserId();
+
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
-				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
+				.getAttendanceManagement(courseId, lmsUserId);
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
 
-		boolean hasUnfilledPast = studentAttendanceService.hasUnfilledPastAttendance(
-				loginUserDto.getCourseId(),
-				loginUserDto.getLmsUserId());
-
-		model.addAttribute("showPastAlert", hasUnfilledPast);
+		//酒井優羽-TASK25
+		boolean showPast = studentAttendanceService.PastUnenteredAttendance(lmsUserId);
+		model.addAttribute("showPastAlert", showPast);
 
 		return "attendance/detail";
 	}
@@ -138,6 +139,8 @@ public class AttendanceController {
 	@RequestMapping(path = "/update", params = "complete", method = RequestMethod.POST)
 	public String complete(AttendanceForm attendanceForm, Model model, BindingResult result)
 			throws ParseException {
+
+		studentAttendanceService.formatConversion(attendanceForm);
 
 		// 更新
 		String message = studentAttendanceService.update(attendanceForm);

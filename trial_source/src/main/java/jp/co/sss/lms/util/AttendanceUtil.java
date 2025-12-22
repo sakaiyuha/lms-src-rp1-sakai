@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,8 @@ public class AttendanceUtil {
 
 	@Autowired
 	private DateUtil dateUtil;
+	@Autowired
+	private TrainingTime trainingTime;
 	@Autowired
 	private MSectionMapper mSectionMapper;
 
@@ -130,6 +133,66 @@ public class AttendanceUtil {
 
 		}
 		return map;
+	}
+
+	public LinkedHashMap<Integer, String> getHourMap() {
+		LinkedHashMap<Integer, String> hourMap = new LinkedHashMap<>();
+		hourMap.put(null, "");
+
+		for (int i = 0; i < 24; i++) {
+			hourMap.put(i, String.format("%02d", i));
+		}
+		return hourMap;
+	}
+
+	public LinkedHashMap<Integer, String> getMinuteMap() {
+		LinkedHashMap<Integer, String> minuteMap = new LinkedHashMap<>();
+		minuteMap.put(null, "");
+
+		for (int i = 0; i < 60; i++) {
+			minuteMap.put(i, String.format("%02d", i));
+		}
+		return minuteMap;
+	}
+
+	public Integer getHour(String trainingTime) {
+		if (StringUtils.isBlank(trainingTime)) {
+			return null;
+		}
+		return Integer.parseInt(trainingTime.substring(0, 2));
+	}
+
+	public Integer getMinute(String trainingTime) {
+		if (StringUtils.isBlank(trainingTime)) {
+			return null;
+		}
+		return Integer.parseInt(trainingTime.substring(trainingTime.length() - 2));
+	}
+
+	public TrainingTime calculationTime(TrainingTime trainingStartTime, TrainingTime trainingEndTime) {
+
+		TrainingTime startTime = trainingTime.max(trainingStartTime, Constants.SSS_WORK_START_TIME);
+		TrainingTime endTime = trainingTime.min(trainingEndTime, Constants.SSS_WORK_END_TIME);
+		TrainingTime AmEndTime = trainingTime.min(trainingEndTime, Constants.SSS_REST_START_TIME);
+		TrainingTime PmStartTime = trainingTime.max(trainingStartTime, Constants.SSS_REST_END_TIME);
+
+		TrainingTime total = timeSum(startTime, endTime, AmEndTime, PmStartTime);
+
+		return total;
+
+	}
+
+	public Integer BlankTime(String time) {
+		TrainingTime trainingTime = new TrainingTime(time);
+
+		int hour = trainingTime.getHour() * 60;
+
+		int minute = trainingTime.getMinute();
+
+		int brankTime = hour + minute;
+
+		return brankTime;
+
 	}
 
 	/**
