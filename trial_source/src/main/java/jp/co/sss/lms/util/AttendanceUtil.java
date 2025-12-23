@@ -210,4 +210,23 @@ public class AttendanceUtil {
 		return false;
 	}
 
+	private TrainingTime timeSum(TrainingTime startTime, TrainingTime endTime,
+			TrainingTime firstHalfEndTime, TrainingTime lastHalfStartTime) {
+		TrainingTime firstHalf = new TrainingTime(0, 0);
+		TrainingTime lastHalf = new TrainingTime(0, 0);
+
+		// 賃金対象開始時間が午前終了時間より前の場合、午前の勤務分を算出
+		if (firstHalfEndTime.compareTo(startTime) > 0) {
+			// 午前の勤務時間 = 午前終了時間 - 賃金対象開始時間
+			firstHalf = firstHalfEndTime.subtract(startTime);
+		}
+		// 賃金対象終了時間が午後開始時間より後の場合、午後の勤務分を算出
+		if (lastHalfStartTime.compareTo(endTime) < 0) {
+			// 午後の勤務時間 = 賃金対象終了時間 - 午後開始時間
+			lastHalf = endTime.subtract(lastHalfStartTime);
+		}
+		TrainingTime total = firstHalf.add(lastHalf);
+		return total;
+	}
+
 }
