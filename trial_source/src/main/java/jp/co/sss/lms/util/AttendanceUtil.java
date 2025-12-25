@@ -135,9 +135,10 @@ public class AttendanceUtil {
 		return map;
 	}
 
+	//酒井優羽-TASK26
 	public LinkedHashMap<Integer, String> getHourMap() {
 		LinkedHashMap<Integer, String> hourMap = new LinkedHashMap<>();
-		hourMap.put(null, "");
+		hourMap.put(-1, "");
 
 		for (int i = 0; i < 24; i++) {
 			hourMap.put(i, String.format("%02d", i));
@@ -145,9 +146,10 @@ public class AttendanceUtil {
 		return hourMap;
 	}
 
+	//酒井優羽-TASK26
 	public LinkedHashMap<Integer, String> getMinuteMap() {
 		LinkedHashMap<Integer, String> minuteMap = new LinkedHashMap<>();
-		minuteMap.put(null, "");
+		minuteMap.put(-1, "");
 
 		for (int i = 0; i < 60; i++) {
 			minuteMap.put(i, String.format("%02d", i));
@@ -155,6 +157,7 @@ public class AttendanceUtil {
 		return minuteMap;
 	}
 
+	//酒井優羽-TASK26
 	public Integer getHour(String trainingTime) {
 		if (StringUtils.isBlank(trainingTime)) {
 			return null;
@@ -162,6 +165,7 @@ public class AttendanceUtil {
 		return Integer.parseInt(trainingTime.substring(0, 2));
 	}
 
+	//酒井優羽-TASK26
 	public Integer getMinute(String trainingTime) {
 		if (StringUtils.isBlank(trainingTime)) {
 			return null;
@@ -169,6 +173,7 @@ public class AttendanceUtil {
 		return Integer.parseInt(trainingTime.substring(trainingTime.length() - 2));
 	}
 
+	//酒井優羽-TASK26
 	public TrainingTime calculationTime(TrainingTime trainingStartTime, TrainingTime trainingEndTime) {
 
 		TrainingTime startTime = trainingTime.max(trainingStartTime, Constants.SSS_WORK_START_TIME);
@@ -182,6 +187,7 @@ public class AttendanceUtil {
 
 	}
 
+	//酒井優羽-TASK26
 	public Integer BlankTime(String time) {
 		TrainingTime trainingTime = new TrainingTime(time);
 

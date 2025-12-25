@@ -47,6 +47,7 @@ public class DailyAttendanceForm {
 	/** インデックス */
 	private String index;
 
+	//酒井優羽-TASK26
 	private Integer trainingStartTimeHour;
 	private Integer trainingStartTimeMinute;
 
