@@ -90,7 +90,8 @@ public class StudentAttendanceService {
 				Constants.DB_FLG_FALSE, trainingDate);
 		return notEnterCount > Constants.DB_FLG_FALSE ? true : false;
 	}
-
+	
+	//酒井優羽-TASK26
 	public void formatConversion(AttendanceForm attendanceForm) {
 		for (DailyAttendanceForm dailyAttendanceForm : attendanceForm.getAttendanceList()) {
 
@@ -256,7 +257,7 @@ public class StudentAttendanceService {
 		attendanceForm.setUserName(loginUserDto.getUserName());
 		attendanceForm.setLeaveFlg(loginUserDto.getLeaveFlg());
 		attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
-		
+		//酒井優羽-TASK26
 		attendanceForm.setHourMap(attendanceUtil.getHourMap());
 		attendanceForm.setMinuteMap(attendanceUtil.getMinuteMap());
 
@@ -279,7 +280,7 @@ public class StudentAttendanceService {
 					.setTrainingStartTime(attendanceManagementDto.getTrainingStartTime());
 			dailyAttendanceForm.setTrainingEndTime(attendanceManagementDto.getTrainingEndTime());
 
-			// Task.26 出退勤時間の入力方法変更
+			//酒井優羽-TASK26
 			dailyAttendanceForm.setTrainingStartTimeHour(
 					attendanceUtil.getHour(attendanceManagementDto.getTrainingStartTime()));
 			dailyAttendanceForm.setTrainingStartTimeMinute(
